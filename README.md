@@ -17,3 +17,9 @@ This repository contains the codes only because the data size is huge.
 ## stage C
 - z=17 tiled COPC files from stage B files, merged by tile numbers.
 - EPSG: 4326
+- GeoJSON text sequence should be produced, too.
+
+# the site
+- HTML hosted here on GitHub pages.
+- Tiles hosted on x.optgeo.org.
+- 
