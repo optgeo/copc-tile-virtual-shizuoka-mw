@@ -1,0 +1,115 @@
+<!doctype html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link rel="stylesheet" href="maplibre-gl.css"/>
+<script src="maplibre-gl.js"></script>
+<script src="flatgeobuf-geojson.min.js"></script>
+</head>
+<body>
+<style>
+body { margin:0; padding:0; font-family: 'Roboto', sans-serif; color: #333333}
+#map { top:0; height: 100vh; width: 100vw; position: fixed; z-index: 0; }
+</style>
+<div id="map"></div>
+<script>
+document.addEventListener("DOMContentLoaded", async () => {
+  const response = await fetch("frames.fgb")
+  const map = new maplibregl.Map({
+    container: "map",
+    style: "maplibre.json",
+    hash: true, 
+    center: [135, 35],
+    zoom: 4,
+    maxZoom: 22
+  })
+  map.addControl(new maplibregl.NavigationControl())
+  map.addControl(new maplibregl.ScaleControl({
+    maxWidth: 200, unit: "metric"
+  }))
+  map.on('load', async () => {
+    const fc = { type: "FeatureCollection", features: [] }
+    let id = 0
+    for await (const f of
+      flatgeobuf.deserialize(response.body, undefined, undefined)) {
+      fc.features.push({...f, id: id})
+      id++
+    }
+    map.addSource('frames', {
+      type: 'geojson',
+      data: fc
+    })
+    map.addLayer({
+      id: 'frames',
+      type: 'fill-extrusion',
+      source: 'frames',
+      layout: {},
+      paint: {
+        'fill-extrusion-base': ['get', 'base'],
+        'fill-extrusion-height': ['get', 'height'],
+        'fill-extrusion-opacity': 0.5,
+        'fill-extrusion-color': [
+          'case',
+          [
+            'boolean',
+            [
+              'feature-state',
+              'hover'
+            ],
+            false
+          ],
+          'rgb(200, 0, 0)',
+          'rgb(200, 200, 200)'
+        ]
+      }
+    })
+
+    let fHover
+    map.on('mousemove', (e) => {
+      let features = map.queryRenderedFeatures(e.point, {
+        layers: ['frames']
+      })
+      if (features[0]) {
+        mouseout()
+        mouseover(features[0])
+      } else {
+        mouseout()
+      }
+    })
+    map.on('mouseout', (e) => {
+      mouseout()
+    })
+    map.on('click', (e) => {
+      if (!fHover) return
+      console.log(fHover)
+      const url = `https://viewer.copc.io/?copc=` +
+        location.href.split('#')[0] + 
+        `copc/${fHover.properties.z}-${fHover.properties.f}-` +
+        `${fHover.properties.x}-${fHover.properties.y}.copc.laz`
+      console.log(url)
+    })
+    mouseout = () => {
+      if (!fHover) return
+      map.getCanvasContainer().style.cursor = 'default'
+      map.setFeatureState({
+        source: fHover.source,
+        id: fHover.id
+      }, {
+        hover: false
+      })
+    }
+    mouseover = (f) => {
+      fHover = f
+      map.getCanvasContainer().style.cursor = 'pointer'
+      map.setFeatureState({
+        source: fHover.source,
+        id: fHover.id
+      }, {
+        hover: true
+      })
+    }
+  })
+})
+</script>
+</body>
+

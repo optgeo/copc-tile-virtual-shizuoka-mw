@@ -12,11 +12,11 @@ This repository contains the codes only because the data size is huge.
 
 ## stage B
 - z=17 tiled LAS files from each stage A file
-- EPSG: 4326
+- EPSG: 3857
 
 ## stage C
 - z=17 tiled COPC files from stage B files, merged by tile numbers.
-- EPSG: 4326
+- EPSG: 3857
 - GeoJSON text sequence should be produced, too.
 
 # the site
