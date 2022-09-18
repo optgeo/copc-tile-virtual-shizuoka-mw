@@ -37,7 +37,8 @@ def cut(path, z, f, x, y)
   system "echo '#{JSON.pretty_generate(pipeline)}'"
 end
 
-Dir.glob("a/*.las") {|path|
+#Dir.glob("a/*.las") {|path|
+Dir.glob("az/*.laz") {|path|
   json = JSON.parse(`pdal info #{path}`)
   bbox = json['stats']['bbox']['native']['bbox']
   max = `echo #{bbox['maxx']} #{bbox['maxy']} #{bbox['maxz']} | cs2cs -f %.12f +init=epsg:6676 +to +init=epsg:4326`.strip.split.map{|v| v.to_f}
