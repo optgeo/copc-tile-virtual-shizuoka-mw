@@ -81,11 +81,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     })
     map.on('click', (e) => {
       if (!fHover) return
-      console.log(fHover)
       const url = `https://viewer.copc.io/?copc=` +
         location.href.split('#')[0] + 
         `copc/${fHover.properties.z}-${fHover.properties.f}-` +
         `${fHover.properties.x}-${fHover.properties.y}.copc.laz`
+      window.open(url, '_blank')
       console.log(url)
     })
     mouseout = () => {
