@@ -64,46 +64,51 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     })
 
-    let fHover
+    let hovers = []
+    const N = 2
     map.on('mousemove', (e) => {
       let features = map.queryRenderedFeatures(e.point, {
         layers: ['frames']
       })
-      if (features[0]) {
-        mouseout()
-        mouseover(features[0])
-      } else {
-        mouseout()
+      mouseout()
+      let n = 0
+      for (f of features) {
+        mouseover(f)
+        n++
+        if (n == N) break
       }
     })
     map.on('mouseout', (e) => {
       mouseout()
     })
     map.on('click', (e) => {
-      if (!fHover) return
-      const url = `https://viewer.copc.io/?copc=` +
-        location.href.split('#')[0] + 
-        `copc/${fHover.properties.z}-${fHover.properties.f}-` +
-        `${fHover.properties.x}-${fHover.properties.y}.copc.laz`
-      window.open(url, '_blank')
-      console.log(url)
+      for (f of hovers) {
+        const url = `https://viewer.copc.io/?copc=` +
+          location.href.split('#')[0] + 
+          `copc/${f.properties.z}-${f.properties.f}-` +
+          `${f.properties.x}-${f.properties.y}.copc.laz`
+        window.open(url, '_blank')
+        console.log(url)
+      }
     })
     mouseout = () => {
-      if (!fHover) return
-      map.getCanvasContainer().style.cursor = 'default'
-      map.setFeatureState({
-        source: fHover.source,
-        id: fHover.id
-      }, {
-        hover: false
-      })
+      for (f of hovers) {
+        map.getCanvasContainer().style.cursor = 'default'
+        map.setFeatureState({
+          source: f.source,
+          id: f.id
+        }, {
+          hover: false
+        })
+      }
+      hovers = []
     }
     mouseover = (f) => {
-      fHover = f
+      hovers.push(f)
       map.getCanvasContainer().style.cursor = 'pointer'
       map.setFeatureState({
-        source: fHover.source,
-        id: fHover.id
+        source: f.source,
+        id: f.id
       }, {
         hover: true
       })

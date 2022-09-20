@@ -3,11 +3,13 @@ require 'json'
 def merge(zfxy, list)
   p zfxy
   p list
+  dst_path = "c/#{zfxy}.copc.laz"
+  return if File.exist?(dst_path) # express
   pipeline = list
   pipeline.map! {|v| "b/#{zfxy}-#{v}.laz" }
   pipeline << { :type => 'filters.merge' }
   pipeline << { :type => 'writers.copc',
-    :filename => "c/#{zfxy}.copc.laz" }
+    :filename => dst_path }
   print "#{JSON.pretty_generate(pipeline)}\n"
   system "echo '#{JSON.dump(pipeline)}' | pdal pipeline -s"
 end
