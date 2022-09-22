@@ -3,12 +3,19 @@ PoC: COPC Tile (z=17) of virtual-shizuoka-mw
 
 This repository contains the codes only because the data size is huge. 
 
+# demo
+https://x.optgeo.org/copc-tile-virtual-shizuoka-mw/
+
 # stages
 ## stage A
 - plain downloaded files from [virtual-shizuoka-mw](https://www.geospatial.jp/ckan/dataset/virtual-shizuoka-mw/resource/1879dffe-f449-42e5-8371-2273300fa8b8).
 - file url template is `https://gic-shizuoka.s3.ap-northeast-1.amazonaws.com/2022/p/LP/LAS/${code}.zip`
 - `${code}` list is on https://gic-shizuoka.s3.ap-northeast-1.amazonaws.com/2022/p/LP/etc/LP_MeshList.txt.
 - CRS: 平面直角座標系VIII = EPSG:6676 = 6668 + 8 :-)
+
+## stage AZ
+- LAZ version of A
+- to save storage size
 
 ## stage B
 - z=17 tiled LAS files from each stage A file

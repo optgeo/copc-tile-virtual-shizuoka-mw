@@ -84,7 +84,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     map.on('click', (e) => {
       for (f of hovers) {
         const url = `https://viewer.copc.io/?copc=` +
-          location.href.split('#')[0] + 
+          location.href.split('?')[0].split('#')[0] + 
           `copc/${f.properties.z}-${f.properties.f}-` +
           `${f.properties.x}-${f.properties.y}.copc.laz`
         window.open(url, '_blank')

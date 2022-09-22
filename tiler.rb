@@ -3,7 +3,7 @@ require './zfxy.rb'
 Z = 17
 
 def cut(path, z, f, x, y)
-  print "creating #{z}/#{f}/#{x}/#{y} of #{path}\n"
+  print "creating #{z}/#{f}/#{x}/#{y} from #{path}\n"
   bbox = zfxy2bbox(z, f, x, y)
   h0 = f2height(z, f)
   h1 = f2height(z, f + 1)
@@ -12,7 +12,7 @@ def cut(path, z, f, x, y)
   bounds = 
     "([#{min[0]}, #{max[0]}], [#{min[1]}, #{max[1]}], [#{h0}, #{h1}])"
   filename = 
-    "b/#{z}-#{f}-#{x}-#{y}-#{path.split('/')[-1].sub('las', 'laz')}"
+    "b/#{z}-#{f}-#{x}-#{y}-#{path.split('/')[-1]}"
   if File.exist?(filename)
     print "skip creating #{filename} because it is already there.\n"
     return
@@ -37,7 +37,16 @@ def cut(path, z, f, x, y)
   system "echo '#{JSON.pretty_generate(pipeline)}'"
 end
 
-Dir.glob("a/*.las") {|path|
+#Dir.glob("a/*.las") {|path|
+Dir.glob("az/*.laz") {|path|
+  code = File.basename(path, '.laz')
+
+  n = Dir.glob("b/*#{code}.laz").size
+  if n > 0
+    print "skip #{path} bacause there are #{n} files for #{code} in b.\n"
+    next
+  end
+
   json = JSON.parse(`pdal info #{path}`)
   bbox = json['stats']['bbox']['native']['bbox']
   max = `echo #{bbox['maxx']} #{bbox['maxy']} #{bbox['maxz']} | cs2cs -f %.12f +init=epsg:6676 +to +init=epsg:4326`.strip.split.map{|v| v.to_f}
