@@ -29,4 +29,4 @@ https://x.optgeo.org/copc-tile-virtual-shizuoka-mw/
 # the site
 - HTML hosted here on GitHub pages.
 - Tiles hosted on x.optgeo.org.
-- 
+- Available at https://x.optgeo.org/copc-tile-virtual-shizuoka-mw/
