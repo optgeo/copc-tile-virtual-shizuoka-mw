@@ -2,7 +2,7 @@ task :a do
   sh <<-EOS
 curl -o tmp/list.txt \
 https://gic-shizuoka.s3.ap-northeast-1.amazonaws.com/2022/p/LP/etc/LP_MeshList.txt
-grep 08oc00 tmp/list.txt > tmp/selected.txt
+grep 08nd77 tmp/list.txt > tmp/selected.txt
   EOS
   #File.foreach('tmp/list.txt') {|l|
   File.foreach('tmp/selected.txt') {|l|
